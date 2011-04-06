@@ -55,14 +55,14 @@ module OmniAuth
       	begin
         creds = session.delete 'omniauth.ldap'
 				@ldap_user_info = {}
-        begin 
-        	(@adaptor.bind(:allow_anonymous => true) unless @adaptor.bound?) 
-        rescue Exception => e 
-        	puts "failed to bind with the default credentials: " + e.message
-       	end          
-        @ldap_user_info = @adaptor.search(:filter => Net::LDAP::Filter.eq(@adaptor.uid, @name_proc.call(creds['username'])),:limit => 1) if @adaptor.bound?
+        #begin 
+        #	(@adaptor.bind(:allow_anonymous => true) unless @adaptor.bound?) 
+        #rescue Exception => e 
+        #	puts "failed to bind with the default credentials: " + e.message
+       	#end          
+        #@ldap_user_info = @adaptor.search(:filter => Net::LDAP::Filter.eq(@adaptor.uid, @name_proc.call(creds['username'])),:limit => 1) if @adaptor.bound?
 				bind_dn = creds['username']
-				bind_dn = @ldap_user_info[:dn].to_a.first if @ldap_user_info[:dn]
+				#bind_dn = @ldap_user_info[:dn].to_a.first if @ldap_user_info[:dn]
         @adaptor.bind(:bind_dn => bind_dn, :password => creds['password'])
         @ldap_user_info = @adaptor.search(:filter => Net::LDAP::Filter.eq(@adaptor.uid, @name_proc.call(creds['username'])),:limit => 1) if @ldap_user_info.empty?
     	  @user_info = self.class.map_user(@@config, @ldap_user_info)
